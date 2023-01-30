@@ -10,6 +10,7 @@ const Home = () => {
 
   const fetchNfts = async() => {
     let nfts; 
+    console.log("Fetching nfts:");
     const api_key = "dQUbHnCVVa5K0Sg0kEqcOzqgbxmlcQhR"
     const baseURL = `https://eth-mainnet.g.alchemy.com/v2/${api_key}/getNFTs/`;
     var requestOptions = {
@@ -17,14 +18,20 @@ const Home = () => {
       };
      
     if (!collection.length) {
-    
       const fetchURL = `${baseURL}?owner=${wallet}`;
+  
+      nfts = await fetch(fetchURL, requestOptions).then(data => data.json())
+    } else {
+
+      console.log("fetching nfts for collection owned by address:")
+      const fetchURL = `${baseURL}?owner=${wallet}&contractAddresses%5B%5D=${collection}`;
   
       nfts = await fetch(fetchURL, requestOptions).then(data => data.json())
     }
   
     if (nfts) {
       console.log("nfts:", nfts)
+      setNFTs(nfts.ownedNfts)
     }
   }
 
